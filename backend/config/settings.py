@@ -32,6 +32,7 @@ MOCKED_DATA = env("MOCKED_DATA", False)
 # Application definition
 INSTALLED_APPS = [
     # Third-party
+    "django_prometheus",
     "rest_framework",
     "corsheaders",
     "django_filters",
@@ -44,10 +45,14 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS += ["django_extensions"]
 
+# Les middlewares Prometheus encadrent la chaine : Before en premier, After en dernier.
+# Toute requete traversant un middleware place en dehors de ces bornes ne serait pas mesuree.
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -58,7 +63,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database - TimescaleDB connection
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        # wrapper instrumente : expose en plus les metriques SQL (nb de requetes, erreurs, latence)
+        "ENGINE": "django_prometheus.db.backends.postgresql",
         "NAME": env("DB_NAME", default="meteodb"),
         "USER": env("DB_USER", default="infoclimat"),
         "PASSWORD": env("DB_PASSWORD", default="infoclimat2026"),
