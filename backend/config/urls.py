@@ -10,6 +10,8 @@ from drf_spectacular.views import (
 )
 
 urlpatterns = [
+    # Metrics Prometheus : scrape en interne par le reseau Docker, non expose via nginx
+    path("", include("django_prometheus.urls")),
     # API v1
     path("api/v1/", include("weather.urls")),
     # OpenAPI schema and documentation

@@ -36,6 +36,12 @@ services:
       context: ./backend
     env_file:
       - ./.env
+    environment:
+      # repertoire partage ou les 3 workers gunicorn ecrivent leurs compteurs
+      PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+    tmpfs:
+      # en RAM, et vide a chaque demarrage : sinon on reagrege les compteurs du run precedent
+      - /tmp/prometheus_multiproc
     depends_on:
       timescaledb:
         condition: service_healthy
@@ -51,9 +57,47 @@ services:
     networks:
       - app_net
 
+  prometheus:
+    image: prom/prometheus:v3.7.3
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    depends_on:
+      - backend
+    networks:
+      - app_net # obligatoire pour joindre backend:8000
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.3.1
+    container_name: grafana
+    ports:
+      - "3001:3000" # 3000 est deja pris par nuxt en dev
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - app_net
+    restart: unless-stopped
+
 volumes:
   timescaledb-data:
     driver: local
+  prometheus-data:
+  grafana-data:
 networks:
   app_net:
   bd_net:

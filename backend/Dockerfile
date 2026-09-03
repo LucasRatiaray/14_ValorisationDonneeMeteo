@@ -1,4 +1,5 @@
-FROM python:3.12-slim-bookworm AS builder
+# variante -dev : contient un shell et les outils de build, tourne en root
+FROM dhi.io/python:3.12-alpine-dev AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:0.10.0 /uv /uvx /bin/
 
@@ -7,7 +8,8 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-FROM python:3.12-slim-bookworm
+# image durcie : ni shell ni gestionnaire de paquets, utilisateur non-root (uid 65532)
+FROM dhi.io/python:3.12-alpine
 
 WORKDIR /app
 
@@ -22,4 +24,5 @@ ENV PATH="/app/.venv/bin:$PATH" \
 
 EXPOSE 8000
 
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120", "--worker-tmp-dir", "/dev/shm", "--access-logfile", "-", "--error-logfile", "-", "--log-level", "info"]
+# les options sont dans gunicorn.conf.py, qui ajoute le hook multiprocess prometheus
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "config.wsgi:application"]

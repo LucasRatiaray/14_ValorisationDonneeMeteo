@@ -1,4 +1,5 @@
-FROM node:24-alpine AS build
+# variante -dev : shell + npm pour compiler
+FROM dhi.io/node:24-alpine-dev AS build
 
 WORKDIR /app
 
@@ -13,7 +14,8 @@ COPY . .
 
 RUN npm run build
 
-FROM node:24-alpine AS prod
+# image durcie : ni shell ni npm, utilisateur non-root (uid 1000)
+FROM dhi.io/node:24-alpine AS prod
 
 WORKDIR /app
 

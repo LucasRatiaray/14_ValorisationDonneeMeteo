@@ -1,0 +1,12 @@
+apiVersion: 1
+
+# datasource declaree par fichier et non a la main : sans ca, elle vit dans le
+# volume grafana et disparait au premier "docker compose down -v".
+datasources:
+  - name: Prometheus
+    uid: prometheus # uid fixe : c'est lui que reference le dashboard versionne
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090 # nom du service docker, pas localhost
+    isDefault: true
+    editable: false
