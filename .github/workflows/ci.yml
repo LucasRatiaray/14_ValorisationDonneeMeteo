@@ -132,6 +132,7 @@ jobs:
       contents: read
       packages: write #requis pour pousser sur ghcr.io
     strategy:
+      fail-fast: false #un service qui casse ne doit pas annuler le rapport de l'autre
       matrix:
         service: [backend, frontend] #un job par image
     steps:
