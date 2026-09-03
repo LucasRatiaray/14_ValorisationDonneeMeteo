@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [main]
+    branches: [main, demo/test-casse] #branche de demo : a retirer apres
   pull_request:
   workflow_dispatch: #pour relancer le pipeline à la demande
 
