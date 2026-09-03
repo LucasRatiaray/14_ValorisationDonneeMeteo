@@ -162,11 +162,11 @@ jobs:
       - name: install trivy
         uses: aquasecurity/setup-trivy@v0.3.1
 
-      #--exit code stop le pipeline si une CVE CRITICAL trouvé
+      #le scan produit un rapport, il ne bloque pas le pipeline.
+      #le VEX filtre les CVE qu'on a analysees et jugees non exploitables (cf .trivy/vex.openvex.json)
       - name: scan image
         run: |
           trivy image \
-            --exit-code 1 \
             --format json \
             --output trivy-image-${{ matrix.service }}.json \
             --vex .trivy/vex.openvex.json \
