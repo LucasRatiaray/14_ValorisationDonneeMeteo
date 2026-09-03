@@ -85,6 +85,16 @@ jobs:
           output: trivy-code-backend.json
           severity: CRITICAL,HIGH
 
+      #le rapport json part en artefact, ce step-ci l'affiche dans les logs du job
+      - name: security scan backend (lisible dans les logs)
+        if: ${{ !cancelled() }}
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: ./backend
+          format: table
+          severity: CRITICAL,HIGH
+
       - name: security scan frontend
         if: ${{ !cancelled() }}
         uses: aquasecurity/trivy-action@v0.36.0
@@ -93,6 +103,16 @@ jobs:
           scan-ref: ./frontend
           format: json
           output: trivy-code-frontend.json
+          severity: CRITICAL,HIGH
+
+      #le rapport json part en artefact, ce step-ci l'affiche dans les logs du job
+      - name: security scan frontend (lisible dans les logs)
+        if: ${{ !cancelled() }}
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: ./frontend
+          format: table
           severity: CRITICAL,HIGH
 
       #artefacts
