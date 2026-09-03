@@ -2,7 +2,83 @@
   "@context": "https://openvex.dev/ns/v0.2.0",
   "@id": "https://openvex.dev/docs/valometeo/vex-001",
   "author": "Lucas Ratiaray",
-  "timestamp": "2026-07-16T00:00:00Z",
+  "timestamp": "2026-09-03T00:00:00Z",
   "version": 1,
-  "statements": []
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "CVE-2023-45853",
+        "description": "zlib: integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_6"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/zlib1g@1.2.13.dfsg-1"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "La fonction en cause appartient à minizip, que Debian ne compile pas dans zlib1g : le code n'est donc pas dans notre image.",
+      "timestamp": "2026-09-03T00:00:00Z"
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-8376",
+        "description": "perl: heap buffer overflow when compiling regular expressions on 32-bit builds"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/perl-base@5.36.0-7+deb12u3"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "Le bug ne touche que les builds 32 bits de Perl, or notre image est en 64 bits.",
+      "timestamp": "2026-09-03T00:00:00Z"
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-13221",
+        "description": "perl: incorrect regular expression processing via large regular expressions"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/perl-base@5.36.0-7+deb12u3"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "Perl est présent parce que Debian l'installe par défaut, mais on ne s'en sert jamais : le conteneur lance gunicorn, pas des scripts Perl.",
+      "timestamp": "2026-09-03T00:00:00Z"
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-42496",
+        "description": "perl-archive-tar: path traversal via crafted symlinks allows arbitrary file access"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/perl-base@5.36.0-7+deb12u3"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "Pareil que ci-dessus : on n'exécute aucun script Perl et on n'extrait aucune archive tar dans le conteneur.",
+      "timestamp": "2026-09-03T00:00:00Z"
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2025-7458",
+        "description": "sqlite: integer overflow"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/libsqlite3-0@3.40.1-2+deb12u2"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "On utilise PostgreSQL, pas SQLite. La lib est là uniquement à cause du module sqlite3 de Python, qu'on n'importe nulle part.",
+      "timestamp": "2026-09-03T00:00:00Z"
+    }
+  ]
 }
