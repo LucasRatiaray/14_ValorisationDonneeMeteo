@@ -57,9 +57,27 @@ services:
     networks:
       - app_net
 
+  prometheus:
+    image: prom/prometheus:v3.7.3
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    depends_on:
+      - backend
+    networks:
+      - app_net # obligatoire pour joindre backend:8000
+    restart: unless-stopped
+
 volumes:
   timescaledb-data:
     driver: local
+  prometheus-data:
 networks:
   app_net:
   bd_net:

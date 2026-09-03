@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s # frequence a laquelle prometheus interroge ses cibles
+  evaluation_interval: 15s
+
+scrape_configs:
+  # prometheus se surveille lui-meme : utile pour verifier qu'il tourne
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # notre API django. "backend" est le nom du service dans le reseau docker,
+  # pas localhost : depuis le conteneur prometheus, localhost c'est prometheus.
+  - job_name: django-backend
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["backend:8000"]
+        labels:
+          service: meteo-api
+          env: dev
