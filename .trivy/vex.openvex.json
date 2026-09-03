@@ -1,0 +1,8 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://openvex.dev/docs/valometeo/vex-001",
+  "author": "Lucas Ratiaray",
+  "timestamp": "2026-07-16T00:00:00Z",
+  "version": 1,
+  "statements": []
+}
