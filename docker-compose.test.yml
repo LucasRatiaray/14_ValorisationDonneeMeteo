@@ -34,7 +34,7 @@ services:
 
 
   backend:
-    image: ${REGISTRY_IMAGE:-ghcr.io/lucasratiaray/14_valorisationdonneemeteo}/backend:${IMAGE_TAG:-latest}
+    image: ghcr.io/dataforgoodfr/14_valorisationdonneemeteo-backend:latest
 
 
     env_file:
@@ -49,7 +49,7 @@ services:
 
 
   frontend:
-    image: ${REGISTRY_IMAGE:-ghcr.io/lucasratiaray/14_valorisationdonneemeteo}/frontend:${IMAGE_TAG:-latest}
+    image: ghcr.io/dataforgoodfr/14_valorisationdonneemeteo-frontend:latest
     env_file:
       - ./.env
     networks:
