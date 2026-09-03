@@ -1,0 +1,13 @@
+apiVersion: 1
+
+# grafana lit les .json de /var/lib/grafana/dashboards et les recharge toutes les 30s.
+# le dossier est monte en lecture seule depuis monitoring/grafana/dashboards/.
+providers:
+  - name: meteo
+    orgId: 1
+    folder: Meteo
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards
