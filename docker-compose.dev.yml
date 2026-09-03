@@ -36,6 +36,12 @@ services:
       context: ./backend
     env_file:
       - ./.env
+    environment:
+      # repertoire partage ou les 3 workers gunicorn ecrivent leurs compteurs
+      PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+    tmpfs:
+      # en RAM, et vide a chaque demarrage : sinon on reagrege les compteurs du run precedent
+      - /tmp/prometheus_multiproc
     depends_on:
       timescaledb:
         condition: service_healthy
