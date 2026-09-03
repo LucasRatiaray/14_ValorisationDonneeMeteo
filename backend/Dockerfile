@@ -1,5 +1,4 @@
-# variante -dev : contient un shell et les outils de build, tourne en root
-FROM dhi.io/python:3.12-alpine-dev AS builder
+FROM python:3.12-slim-bookworm AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:0.10.0 /uv /uvx /bin/
 
@@ -8,8 +7,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-# image durcie : ni shell ni gestionnaire de paquets, utilisateur non-root (uid 65532)
-FROM dhi.io/python:3.12-alpine
+FROM python:3.12-slim-bookworm
 
 WORKDIR /app
 
