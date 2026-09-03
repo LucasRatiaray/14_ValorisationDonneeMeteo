@@ -165,6 +165,16 @@ jobs:
       #le scan produit un rapport, il ne bloque pas le pipeline.
       #le VEX filtre les CVE qu'on a analysees et jugees non exploitables (cf .trivy/vex.openvex.json)
       #ajouter --exit-code 1 après ajout des image hardened
+      #affichage lisible dans les logs du job, en plus du rapport json.
+      #sans --vex : on veut voir ce que l'image contient reellement avant arbitrage.
+      - name: scan image (lisible dans les logs)
+        run: |
+          trivy image \
+            --scanners vuln \
+            --severity CRITICAL \
+            --pkg-types os \
+            local/${{ matrix.service }}:ci
+
       - name: scan image
         run: |
           trivy image \
